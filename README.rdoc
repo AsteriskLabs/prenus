@@ -92,7 +92,7 @@ Well, getting GD and all the other Circos dependencies was a bit of a pain in th
 
 You might also need to fiddle with the circos.conf file, but eventually I had it working pretty solidly. I had circos installed in ~/circos/circos-0.62-1/ and the circos tools in ~/circos/circos-tools-0.16/
 
-s will only work if you're in the Circos Tools tableviewer folder (in my instance, ~/circos/circos-tools-0.16/tools/tableviewer/)
+This will only work if you're in the Circos Tools tableviewer folder (in my instance, ~/circos/circos-tools-0.16/tools/tableviewer/)
 
    prenus -t circos -s 4 /folder/where/nessus/files/are/*.nessus | bin/parse-table -conf samples/parse-table-01.conf | bin/make-conf -dir data
    ../../../circos-0.62-1/bin/circos -conf etc/circos.conf -outputfile prenus.png
