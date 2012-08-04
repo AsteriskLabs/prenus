@@ -10,20 +10,20 @@ This is a quickly hacked together Ruby script that can consume version 2 nessus 
 
 == Installation
 
-1. Clone our copy of the ruby-nessus gem and install it
+* Clone our copy of the ruby-nessus gem and install it
   git clone git://github.com/AsteriskLabs/ruby-nessus.git
   cd ruby-nessus
   rake install
-2. Install the Prenus gem
+* Install the Prenus gem
   gem install prenus
 
 == Usage
 
-1. Download the .nessus files from Nessus you want to Prettify (make sure they're version 2 files, not version 1)
-2. Cd into the folder where the files are
-3. Run Prenus
+* Download the .nessus files from Nessus you want to Prettify (make sure they're version 2 files, not version 1)
+* Cd into the folder where the files are
+* Run Prenus
   prenus -t html -o tmp *.nessus
-4. Happy Happy Joy Joy
+* Happy Happy Joy Joy
 
 == Command Line Options
 
