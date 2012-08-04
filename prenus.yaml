@@ -1,0 +1,11 @@
+# This is an example config file
+prenus:
+    input:
+        override: #Don't delete me, but add sections below, as per examples
+        #    - ip    : "192.168.0.1"
+        #      os    : "Some other OS"
+        #    - ip    : "192.168.0.2"
+        #      os    : "Some OS"
+        #      hostname  : "Somehostname.com"
+        skip: #Don't delete me, but add ips below, as per example
+        #    - "192.168.0.10"
