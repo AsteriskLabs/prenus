@@ -100,4 +100,5 @@ This will only work if you're in the Circos Tools tableviewer folder (in my inst
 This will dump the png into the img/ folder.
 
 == Changes
+* Version 0.0.2 - Updated input - handles duplicate hosts a bit nicer (but not much nicer)
 * Version 0.0.1 - initial release .. buggy to the max

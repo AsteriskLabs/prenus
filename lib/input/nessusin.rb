@@ -67,25 +67,46 @@ class Nessusin
 					high = host.high_severity_count || 0 #grab the number of high findings
 					crit = host.critical_severity_count || 0 #grab the number of critical findings
 
-					# add the host into the hosts hash
-					# I'm not yet doing any 'unique' validation, although I probably should .. oh so slack
-					hosts[hostid] = {:ip => ip, :hostname => hostname, :os => os, :info => info, :low => low, :med => med, :high => high, :crit => crit, :total => info+low+med+high+crit, :total_excl_info => low+med+high+crit}
+					targethostid = hostid #For the moment
+
+					# Check to see if we already have the host (based on IP, Hostname and OS)
+					if hosts.select {|key,f| f[:os].to_s == os and f[:ip].to_s == ip and f[:hostname].to_s == hostname}.count == 0
+						# Okay, we don't have this host yet
+
+						# add the host into the hosts hash
+						hosts[hostid] = {:ip => ip, :hostname => hostname, :os => os, :info => info, :low => low, :med => med, :high => high, :crit => crit, :total => info+low+med+high+crit, :total_excl_info => low+med+high+crit}
+						hostid += 1 # We only increase because we've added a new host
+					else
+						# We do have this host, lets grab the host id
+						hosts.select {|key,f| f[:os].to_s == os and f[:ip].to_s == ip and f[:hostname] == hostname}.each {|k,v| targethostid = k}
+
+						# Lets now check who has the greatest number of findings, and then we'll use that one going forward
+						if hosts[targethostid][:total].to_i < (info + low + med + high) #therefore the older, previously detected host had more - update the counters
+							hosts[targethostid][:info] = info
+							hosts[targethostid][:low] = low
+							hosts[targethostid][:med] = med
+							hosts[targethostid][:high] = high
+							hosts[targethostid][:crit] = crit
+							hosts[targethostid][:total] = info + low + med + high + crit
+							hosts[targethostid][:total_excl_info] = low + med + high + crit
+						end
+					end
 
 					# Now lets iterate through each of the findings in this particular host
 					host.each_event do |event|
 
-						# If the events hash already has this event, lets just add this hostid to it's hosts array within the ports hash
+						# If the events hash already has this event, lets just add this targethostid to it's hosts array within the ports hash
 						if events.has_key?(event.id)
 
 							#Lets check the ports hash
 							if events[event.id][:ports].has_key?(event.port.to_s)
 
 								# We'll only add the hostid if the host's not already in the array
-								events[event.id][:ports][event.port.to_s][:hosts][hostid] = event.output unless events[event.id][:ports][event.port.to_s][:hosts].include?(hostid)
+								events[event.id][:ports][event.port.to_s][:hosts][targethostid] = event.output unless events[event.id][:ports][event.port.to_s][:hosts].include?(targethostid)
 
 							#Lets add this new port to this hash	
 							else
-								events[event.id][:ports][event.port.to_s] = {:hosts => { hostid => event.output}}
+								events[event.id][:ports][event.port.to_s] = {:hosts => { targethostid => event.output}}
 							end
 
 						# okay, this event doesn't exist, lets add it to the events hash
@@ -105,12 +126,9 @@ class Nessusin
 								#:port => event.port.to_s || ""						#port
 								:ports => {}
 							}
-							events[event.id][:ports][event.port.to_s] = {:hosts => {hostid => event.output}}
+							events[event.id][:ports][event.port.to_s] = {:hosts => {targethostid => event.output}}
 						end
 					end
-
-					#increase the unique host id
-					hostid += 1
 				end
 			end
 		end
