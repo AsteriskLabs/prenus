@@ -18,7 +18,7 @@ require 'lib/output'
 require 'lib/input'
 
 #Versioning and .. those things
-$verstring = "Version 0.0.2 - 20th of August, 2012 - Created by Christian \"xntrik\" Frichot.\n\n"
+$verstring = "Version 0.0.3 - 20th of August, 2012 - Created by Christian \"xntrik\" Frichot.\n\n"
 $verstring += "Copyright 2012 Christian Frichot\n\n"
 $verstring += "Licensed under the Apache License, Version 2.0 (the \"License\");\n"
 $verstring += "you may not use this file except in compliance with the License.\n"
