@@ -2,9 +2,9 @@
 $LOAD_PATH.unshift File.expand_path('../lib', __FILE__)
 Gem::Specification.new do |s|
   s.name = "prenus"
-  s.version = "0.0.3"
+  s.version = "0.0.4"
   s.authors = ["Christian Frichot"]
-  s.date = "2012-08-20"
+  s.date = "2012-09-03"
   s.description = "Pretty Nessus = Prenus"
   s.email = "xntrik@gmail.com"
   s.extra_rdoc_files = [
@@ -22,7 +22,7 @@ Gem::Specification.new do |s|
   s.required_rubygems_version = '>= 1.8.0'
 
   {
-    'ruby-nessus' => '~> 1.0.3'
+#    'ruby-nessus' => '~> 1.0.3'
   }.each do |lib, version|
     s.add_runtime_dependency(lib, *version)
   end

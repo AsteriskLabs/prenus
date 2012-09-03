@@ -8,7 +8,7 @@ end
 $root_dir = File.expand_path(File.join(File.dirname(__FILE__),'..'))
 
 #require some goodies
-require 'ruby-nessus'
+#require 'ruby-nessus'
 
 require 'fileutils'
 require 'optparse'
@@ -16,6 +16,7 @@ require 'yaml'
 
 require 'lib/output'
 require 'lib/input'
+require 'lib/gemcache/ruby-nessus/ruby-nessus'
 
 #Versioning and .. those things
 $verstring = "Version 0.0.3 - 20th of August, 2012 - Created by Christian \"xntrik\" Frichot.\n\n"

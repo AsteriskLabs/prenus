@@ -10,19 +10,15 @@ This is a quickly hacked together Ruby script that can consume version 2 nessus 
 
 == Installation
 
-* Clone our copy of the ruby-nessus gem and install it
-  git clone git://github.com/AsteriskLabs/ruby-nessus.git
-  cd ruby-nessus
-  rake install
-* Install the Prenus gem
-  gem install prenus
+* Install the Prenus gem:
+* # gem install prenus
 
 == Usage
 
 * Download the .nessus files from Nessus you want to Prettify (make sure they're version 2 files, not version 1)
 * Cd into the folder where the files are
-* Run Prenus
-  prenus -t html -o tmp *.nessus
+* Run Prenus:
+* # prenus -t html -o tmp *.nessus
 * Happy Happy Joy Joy
 
 == Command Line Options
@@ -100,6 +96,7 @@ This will only work if you're in the Circos Tools tableviewer folder (in my inst
 This will dump the png into the img/ folder.
 
 == Changes
+* Version 0.0.4 - Shifted my copy of ruby-nessus into my lib/gemcache folder
 * Version 0.0.3 - Botched the gem push - like a chump - this should be identical to 0.0.2
 * Version 0.0.2 - Updated input - handles duplicate hosts a bit nicer (but not much nicer)
 * Version 0.0.1 - initial release .. buggy to the max
