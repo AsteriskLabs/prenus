@@ -2,7 +2,7 @@
 $LOAD_PATH.unshift File.expand_path('../lib', __FILE__)
 Gem::Specification.new do |s|
   s.name = "prenus"
-  s.version = "0.0.4"
+  s.version = "0.0.5"
   s.authors = ["Christian Frichot"]
   s.date = "2012-09-03"
   s.description = "Pretty Nessus = Prenus"

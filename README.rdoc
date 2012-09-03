@@ -96,6 +96,7 @@ This will only work if you're in the Circos Tools tableviewer folder (in my inst
 This will dump the png into the img/ folder.
 
 == Changes
+* Version 0.0.5 - FUUUU Did it again. Botched the gem push #facepalm. This is identical to 0.0.4
 * Version 0.0.4 - Shifted my copy of ruby-nessus into my lib/gemcache folder
 * Version 0.0.3 - Botched the gem push - like a chump - this should be identical to 0.0.2
 * Version 0.0.2 - Updated input - handles duplicate hosts a bit nicer (but not much nicer)
