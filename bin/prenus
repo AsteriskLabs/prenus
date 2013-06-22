@@ -19,17 +19,9 @@ require 'lib/input'
 require 'lib/gemcache/ruby-nessus/ruby-nessus'
 
 #Versioning and .. those things
-$verstring = "Version 0.0.6 - 3rd of Sept, 2012 - Created by Christian \"xntrik\" Frichot.\n\n"
-$verstring += "Copyright 2012 Christian Frichot\n\n"
-$verstring += "Licensed under the Apache License, Version 2.0 (the \"License\");\n"
-$verstring += "you may not use this file except in compliance with the License.\n"
-$verstring += "You may obtain a copy of the License at\n\n"
-$verstring += "\thttp://www.apache.org/licenses/LICENSE-2.0\n\n"
-$verstring += "Unless required by applicable law or agreed to in writing, software\n"
-$verstring += "distributed under the License is distributed on an \"AS IS\" BASIS,\n"
-$verstring += "WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n"
-$verstring += "See the License for the specific language governing permissions and\n"
-$verstring += "limitations under the License.\n"
+$verstring = "Version 0.0.7 - 22nd of June, 2013 - Created by Christian \"xntrik\" Frichot.\n\n"
+$verstring += "Copyright 2013 Christian Frichot\n\n"
+$verstring += "See LICENSE.txt for more details"
 
 class OptsConsole
 	def self.parse(args)
