@@ -96,6 +96,7 @@ This will only work if you're in the Circos Tools tableviewer folder (in my inst
 This will dump the png into the img/ folder.
 
 == Changes
+* Version 0.0.9 - Added Nokogiri gem dep
 * Version 0.0.8 - Default HTML output directory - plus - can filter out severity issues for HTML. Updated gemspec, removed internal gem
 * Version 0.0.7 - Included push update for XLS output - and updated version statements
 * Version 0.0.6 - Updated the version in the prenus file

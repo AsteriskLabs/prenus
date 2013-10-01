@@ -2,18 +2,12 @@ PATH
   remote: .
   specs:
     prenus (0.0.8)
-      ruby-nessus (~> 1.1.0)
+      rainbow (~> 1.1.0)
 
 GEM
   remote: http://rubygems.org/
   specs:
-    mini_portile (0.5.1)
-    nokogiri (1.6.0)
-      mini_portile (~> 0.5.0)
     rainbow (1.1.4)
-    ruby-nessus (1.1.0)
-      nokogiri (~> 1.4)
-      rainbow (~> 1.0)
 
 PLATFORMS
   ruby

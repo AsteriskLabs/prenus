@@ -2,7 +2,7 @@
 $LOAD_PATH.unshift File.expand_path('../lib', __FILE__)
 Gem::Specification.new do |s|
   s.name = "prenus"
-  s.version = "0.0.8"
+  s.version = "0.0.9"
   s.authors = ["Christian Frichot"]
   s.date = "2013-01-01"
   s.description = "Pretty Nessus = Prenus"
@@ -22,7 +22,8 @@ Gem::Specification.new do |s|
   s.required_rubygems_version = '>= 1.8.0'
 
   {
-    'rainbow' => '~> 1.1.0'
+    'rainbow' => '~> 1.1.0',
+    'nokogiri' => '~> 1.6.0'
   }.each do |lib, version|
     s.add_runtime_dependency(lib, *version)
   end
