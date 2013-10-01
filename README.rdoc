@@ -58,7 +58,7 @@ By default this is html
 
 === Severity
 
-This option doesn't apply to the html output, but, for all other output types, this sets the bottom severity which will be included for output. For example, if severity is 0, then all vulnerabilities identified as informational, low, medium, high and critical will be included. If severity is 3 then only high and critical will be included.
+This sets the bottom severity which will be included for output. For example, if severity is 0, then all vulnerabilities identified as informational, low, medium, high and critical will be included. If severity is 3 then only high and critical will be included.
 
 By default this is 3.
 
@@ -96,6 +96,7 @@ This will only work if you're in the Circos Tools tableviewer folder (in my inst
 This will dump the png into the img/ folder.
 
 == Changes
+* Version 0.0.8 - Default HTML output directory - plus - can filter out severity issues for HTML. Updated gemspec, removed internal gem
 * Version 0.0.7 - Included push update for XLS output - and updated version statements
 * Version 0.0.6 - Updated the version in the prenus file
 * Version 0.0.5 - FUUUU Did it again. Botched the gem push #facepalm. This is identical to 0.0.4

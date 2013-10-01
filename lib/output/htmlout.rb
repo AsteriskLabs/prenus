@@ -87,7 +87,13 @@ class Htmlout < Baseout
 				low_total += 1 if v[:severity] == 1
 			end
 
-			pie_js(f,"pie_graph","Vuln Breakdown","Vuln Breakdown",[['Low',low_total.to_i],['Medium',med_total.to_i],['High',high_total.to_i],['Critical',crit_total.to_i]],"document.location.href = 'vuln_overview.html';")
+			pie_data = []
+			pie_data << ['Low',low_total.to_i] if @options[:severity] <= 1
+			pie_data << ['Medium',med_total.to_i] if @options[:severity] <= 2
+			pie_data << ['High',high_total.to_i] if @options[:severity] <= 3
+			pie_data << ['Critical',crit_total.to_i] if @options[:severity] <= 4
+
+			pie_js(f,"pie_graph","Vuln Breakdown","Vuln Breakdown",pie_data,"document.location.href = 'vuln_overview.html';")
 
 			target_lookup = "var target_lookup = {"
 			@hosts.each_with_index do |host,index|
@@ -115,7 +121,7 @@ class Htmlout < Baseout
 				ips << host[1][:ip]
 			end
 
-			body += '<table id="hosts_table" class="display"><thead><tr><th>IP</th><th>Hostname</th><th>OS</th><th>Number of vulns</th></tr></thead><tbody>'
+			body += '<table id="hosts_table" class="display"><thead><tr><th>IP</th><th>Hostname</th><th>OS</th><th>Number of vulns (Low to Critical)</th></tr></thead><tbody>'
 			ips.sort_by{|ip| ip.split('.').map{|octet| octet.to_i}}.each do |ip|
 				@hosts.select{|k,v| v[:ip] == ip}.each do |k,v|
 					body += '<tr><td><a href="host_' + k.to_s + '.html">' + ip + '</a></td><td>' + v[:hostname] + '</td><td>' + v[:os] + '</td><td>' + v[:total_excl_info].to_s + '</td></tr>'
@@ -153,6 +159,7 @@ class Htmlout < Baseout
 
 			body += '<table id="vulns_table" class="display"><thead><tr><th>Nessus ID</th><th>Severity</th><th>Name</th><th>Family</th><th>Ports</th><th>Number of impacted hosts</th></tr></thead><tbody>'
 			@events.each do |k,v| 
+				next if v[:severity].to_i < @options[:severity].to_i
 				body += '<tr><td><a href="vuln_' + k.to_s + '.html">' + k.to_s
 				body += '</a></td><td>' + v[:severity].to_s + '<td>' + v[:plugin_name] + '</td>'
 				body += '<td>' + v[:family].to_s + '</td><td>'
@@ -188,6 +195,7 @@ class Htmlout < Baseout
 	#
 	def print_vulns
 		@events.each do |id,values|
+			next if values[:severity].to_i < @options[:severity].to_i
 			File.open(@options[:output] + "/vuln_" + id.to_s + ".html", 'w') do |f|
 				html_header(f,id.to_s)
 
@@ -258,7 +266,12 @@ class Htmlout < Baseout
 				if values[:total_excl_info] == 0
 					pie_js(f,"pie_graph","Criticality Breakdown","Criticality Breakdown",[['Informational ONLY',values[:info].to_i]])					
 				else
-					pie_js(f,"pie_graph","Criticality Breakdown","Criticality Breakdown",[['Low',values[:low].to_i],['Medium',values[:med].to_i],['High',values[:high].to_i],['Critical',values[:crit].to_i]],"document.location.href = '#' + event.point.name;")
+					pie_data = []
+					pie_data << ['Low',values[:low].to_i] if @options[:severity] <= 1
+					pie_data << ['Medium',values[:med].to_i] if @options[:severity] <= 2
+					pie_data << ['High',values[:high].to_i] if @options[:severity] <= 3
+					pie_data << ['Critical',values[:crit].to_i] if @options[:severity] <= 4
+					pie_js(f,"pie_graph","Criticality Breakdown","Criticality Breakdown",pie_data,"document.location.href = '#' + event.point.name;")
 				end
 
 				close_html_header(f)
@@ -271,87 +284,99 @@ class Htmlout < Baseout
 				body += '<div id="vulns"><h2>Vulns</h2>'
 
 
-				body += '<div id="critical"><a name="Critical"></a><h3>Critical</h3>'
+				if @options[:severity] <= 4
+					body += '<div id="critical"><a name="Critical"></a><h3>Critical</h3>'
 
-				body += '<table id="critical_table" class="display"><thead><tr><th>Nessus ID</th><th>Name</th><th>Synopsis</th><th>Result</th><th>Family</th><th>Port</th></tr></thead><tbody>'
-				@events.sort_by{|k,v| v[:port].to_s}.each do |vuln_id,vuln_data|
-					vuln_data[:ports].each {|k,v|
+					body += '<table id="critical_table" class="display"><thead><tr><th>Nessus ID</th><th>Name</th><th>Synopsis</th><th>Result</th><th>Family</th><th>Port</th></tr></thead><tbody>'
+					@events.sort_by{|k,v| v[:port].to_s}.each do |vuln_id,vuln_data|
+						vuln_data[:ports].each {|k,v|
 
-						v[:hosts].each do |h,v2|
-							if h == id and vuln_data[:severity] == 4
-								body += '<tr><td><a href="vuln_' + vuln_id.to_s + '.html">' + vuln_id.to_s + '</a></td><td>' + vuln_data[:plugin_name] + '</td><td>' + vuln_data[:synopsis] + '</td><td>' + v2.to_s.gsub(/<\/?[^>]*>/, "").gsub("\n","<br />") + '</td><td>' + vuln_data[:family] + '</td><td>' + k.to_s + '</td></tr>'
+							v[:hosts].each do |h,v2|
+								if h == id and vuln_data[:severity] == 4
+									body += '<tr><td><a href="vuln_' + vuln_id.to_s + '.html">' + vuln_id.to_s + '</a></td><td>' + vuln_data[:plugin_name] + '</td><td>' + vuln_data[:synopsis] + '</td><td>' + v2.to_s.gsub(/<\/?[^>]*>/, "").gsub("\n","<br />") + '</td><td>' + vuln_data[:family] + '</td><td>' + k.to_s + '</td></tr>'
+								end
 							end
-						end
-					}
+						}
+					end
+					body += '</tbody></table></div>'
 				end
-				body += '</tbody></table></div>'
 
+				if @options[:severity] <= 3
 
-				body += '<div id="high"><a name="High"></a><h3>High</h3>'
+					body += '<div id="high"><a name="High"></a><h3>High</h3>'
 
-				body += '<table id="high_table" class="display"><thead><tr><th>Nessus ID</th><th>Name</th><th>Synopsis</th><th>Result</th><th>Family</th><th>Port</th></tr></thead><tbody>'
-				@events.sort_by{|k,v| v[:port].to_s}.each do |vuln_id,vuln_data|
-					vuln_data[:ports].each {|k,v|
-						v[:hosts].each do |h,v2|
-							if h == id and vuln_data[:severity] == 3
-								body += '<tr><td><a href="vuln_' + vuln_id.to_s + '.html">' + vuln_id.to_s + '</a></td><td>' + vuln_data[:plugin_name] + '</td><td>' + vuln_data[:synopsis] + '</td><td>' + v2.to_s.gsub(/<\/?[^>]*>/, "").gsub("\n","<br />") + '</td><td>' + vuln_data[:family] + '</td><td>' + k.to_s + '</td></tr>'
+					body += '<table id="high_table" class="display"><thead><tr><th>Nessus ID</th><th>Name</th><th>Synopsis</th><th>Result</th><th>Family</th><th>Port</th></tr></thead><tbody>'
+					@events.sort_by{|k,v| v[:port].to_s}.each do |vuln_id,vuln_data|
+						vuln_data[:ports].each {|k,v|
+							v[:hosts].each do |h,v2|
+								if h == id and vuln_data[:severity] == 3
+									body += '<tr><td><a href="vuln_' + vuln_id.to_s + '.html">' + vuln_id.to_s + '</a></td><td>' + vuln_data[:plugin_name] + '</td><td>' + vuln_data[:synopsis] + '</td><td>' + v2.to_s.gsub(/<\/?[^>]*>/, "").gsub("\n","<br />") + '</td><td>' + vuln_data[:family] + '</td><td>' + k.to_s + '</td></tr>'
+								end
 							end
-						end
-					}
+						}
+					end
+					body += '</tbody></table></div>'
 				end
-				body += '</tbody></table></div>'
 
+				if @options[:severity] <= 2
 
-				body += '<div id="medium"><a name="Medium"></a><h3>Medium</h3>'
+					body += '<div id="medium"><a name="Medium"></a><h3>Medium</h3>'
 
-				body += '<table id="medium_table" class="display"><thead><tr><th>Nessus ID</th><th>Name</th><th>Synopsis</th><th>Result</th><th>Family</th><th>Port</th></tr></thead><tbody>'
-				@events.sort_by{|k,v| v[:port].to_s}.each do |vuln_id,vuln_data|
-					vuln_data[:ports].each {|k,v|
-						v[:hosts].each do |h,v2|
-							if h == id and vuln_data[:severity] == 2
-								body += '<tr><td><a href="vuln_' + vuln_id.to_s + '.html">' + vuln_id.to_s + '</a></td><td>' + vuln_data[:plugin_name] + '</td><td>' + vuln_data[:synopsis] + '</td><td>' + v2.to_s.gsub(/<\/?[^>]*>/, "").gsub("\n","<br />") + '</td><td>' + vuln_data[:family] + '</td><td>' + k.to_s + '</td></tr>'
+					body += '<table id="medium_table" class="display"><thead><tr><th>Nessus ID</th><th>Name</th><th>Synopsis</th><th>Result</th><th>Family</th><th>Port</th></tr></thead><tbody>'
+					@events.sort_by{|k,v| v[:port].to_s}.each do |vuln_id,vuln_data|
+						vuln_data[:ports].each {|k,v|
+							v[:hosts].each do |h,v2|
+								if h == id and vuln_data[:severity] == 2
+									body += '<tr><td><a href="vuln_' + vuln_id.to_s + '.html">' + vuln_id.to_s + '</a></td><td>' + vuln_data[:plugin_name] + '</td><td>' + vuln_data[:synopsis] + '</td><td>' + v2.to_s.gsub(/<\/?[^>]*>/, "").gsub("\n","<br />") + '</td><td>' + vuln_data[:family] + '</td><td>' + k.to_s + '</td></tr>'
+								end
 							end
-						end
-					}
+						}
+					end
+					body += '</tbody></table></div>'
+
 				end
-				body += '</tbody></table></div>'
 
+				if @options[:severity] <= 1
 
-				body += '<div id="low"><a name="Low"></a><h3>Low</h3>'
+					body += '<div id="low"><a name="Low"></a><h3>Low</h3>'
 
-				body += '<table id="low_table" class="display"><thead><tr><th>Nessus ID</th><th>Name</th><th>Synopsis</th><th>Result</th><th>Family</th><th>Port</th></tr></thead><tbody>'
-				@events.sort_by{|k,v| v[:port].to_s}.each do |vuln_id,vuln_data|
-					vuln_data[:ports].each {|k,v|
-						v[:hosts].each do |h,v2|
-							if h == id and vuln_data[:severity] == 1
-								body += '<tr><td><a href="vuln_' + vuln_id.to_s + '.html">' + vuln_id.to_s + '</a></td><td>' + vuln_data[:plugin_name] + '</td><td>' + vuln_data[:synopsis] + '</td><td>' + v2.to_s.gsub(/<\/?[^>]*>/, "").gsub("\n","<br />") + '</td><td>' + vuln_data[:family] + '</td><td>' + k.to_s + '</td></tr>'
+					body += '<table id="low_table" class="display"><thead><tr><th>Nessus ID</th><th>Name</th><th>Synopsis</th><th>Result</th><th>Family</th><th>Port</th></tr></thead><tbody>'
+					@events.sort_by{|k,v| v[:port].to_s}.each do |vuln_id,vuln_data|
+						vuln_data[:ports].each {|k,v|
+							v[:hosts].each do |h,v2|
+								if h == id and vuln_data[:severity] == 1
+									body += '<tr><td><a href="vuln_' + vuln_id.to_s + '.html">' + vuln_id.to_s + '</a></td><td>' + vuln_data[:plugin_name] + '</td><td>' + vuln_data[:synopsis] + '</td><td>' + v2.to_s.gsub(/<\/?[^>]*>/, "").gsub("\n","<br />") + '</td><td>' + vuln_data[:family] + '</td><td>' + k.to_s + '</td></tr>'
+								end
 							end
-						end
-					}
+						}
+					end
+					body += '</tbody></table></div>'
 				end
-				body += '</tbody></table></div>'
 
+				if @options[:severity] <= 0
 
-				body += '<div id="informational"><a name="Informational"></a><h3>Informational</h3>'
+					body += '<div id="informational"><a name="Informational"></a><h3>Informational</h3>'
 
-				body += '<table id="informational_table" class="display"><thead><tr><th>Nessus ID</th><th>Name</th><th>Synopsis</th><th>Result</th><th>Family</th><th>Port</th></tr></thead><tbody>'
-				@events.sort_by{|k,v| v[:port].to_s}.each do |vuln_id,vuln_data|
-					vuln_data[:ports].each {|k,v|
-						v[:hosts].each do |h,v2|
-							if h == id and vuln_data[:severity] == 0
-								body += '<tr><td><a href="vuln_' + vuln_id.to_s + '.html">' + vuln_id.to_s + '</a></td><td>' + vuln_data[:plugin_name] + '</td><td>' + vuln_data[:synopsis] + '</td><td>' + v2.to_s.gsub(/<\/?[^>]*>/, "").gsub("\n","<br />") + '</td><td>' + vuln_data[:family] + '</td><td>' + k.to_s + '</td></tr>'
+					body += '<table id="informational_table" class="display"><thead><tr><th>Nessus ID</th><th>Name</th><th>Synopsis</th><th>Result</th><th>Family</th><th>Port</th></tr></thead><tbody>'
+					@events.sort_by{|k,v| v[:port].to_s}.each do |vuln_id,vuln_data|
+						vuln_data[:ports].each {|k,v|
+							v[:hosts].each do |h,v2|
+								if h == id and vuln_data[:severity] == 0
+									body += '<tr><td><a href="vuln_' + vuln_id.to_s + '.html">' + vuln_id.to_s + '</a></td><td>' + vuln_data[:plugin_name] + '</td><td>' + vuln_data[:synopsis] + '</td><td>' + v2.to_s.gsub(/<\/?[^>]*>/, "").gsub("\n","<br />") + '</td><td>' + vuln_data[:family] + '</td><td>' + k.to_s + '</td></tr>'
+								end
 							end
-						end
-					}
+						}
+					end
+					body += '</tbody></table></div>'
 				end
-				body += '</tbody></table></div>'
 
 
-				body += "<script>$(document).ready(function() {\n $('#critical_table').dataTable({\"bPaginate\": false});\n"
-				body += "$('#high_table').dataTable({\"bPaginate\": false});\n"
-				body += "$('#medium_table').dataTable({\"bPaginate\": false});\n"
-				body += "$('#low_table').dataTable({\"bPaginate\": false});\n"
-				body += "$('#informational_table').dataTable({\"bPaginate\": false});\n"
+				body += "<script>$(document).ready(function() {\n ";
+				body += "$('#critical_table').dataTable({\"bPaginate\": false});\n" if @options[:severity] > 4
+				body += "$('#high_table').dataTable({\"bPaginate\": false});\n" if @options[:severity] > 3
+				body += "$('#medium_table').dataTable({\"bPaginate\": false});\n" if @options[:severity] > 2
+				body += "$('#low_table').dataTable({\"bPaginate\": false});\n" if @options[:severity] > 1
+				body += "$('#informational_table').dataTable({\"bPaginate\": false});\n" if @options[:severity] > 0
 				body += "});</script>"
 
 				body += '</div></div>'
@@ -581,61 +606,69 @@ class Htmlout < Baseout
                     }
                 }
             },
-                series: [{
+                series: [
 		eos
 
-		fp.puts "name: 'Critical',"
-		fp.puts "color: 'purple',"
-		tmpline = "data: ["
+		if @options[:severity] <= 4
+			fp.puts "{name: 'Critical',"
+			fp.puts "color: 'purple',"
+			tmpline = "data: ["
 
-		data.each_with_index do |entry,index|
-			tmpline += entry[1][:crit].to_s
-			tmpline += "," unless index == data.length - 1
+			data.each_with_index do |entry,index|
+				tmpline += entry[1][:crit].to_s
+				tmpline += "," unless index == data.length - 1
+			end
+			tmpline += "]"
+			fp.puts tmpline
+			fp.puts "}"
 		end
-		tmpline += "]"
-		fp.puts tmpline
-		fp.puts "},{"
 
-		fp.puts "name: 'High',"
-		fp.puts "color: 'red',"
-		tmpline = "data: ["
+		if @options[:severity] <= 3
+			fp.puts ",{name: 'High',"
+			fp.puts "color: 'red',"
+			tmpline = "data: ["
 
-		data.each_with_index do |entry,index|
-			tmpline += entry[1][:high].to_s
-			tmpline += "," unless index == data.length - 1
+			data.each_with_index do |entry,index|
+				tmpline += entry[1][:high].to_s
+				tmpline += "," unless index == data.length - 1
+			end
+			tmpline += "]"
+			fp.puts tmpline
+			fp.puts "}"
 		end
-		tmpline += "]"
-		fp.puts tmpline
-		fp.puts "},{"
 
+		if @options[:severity] <= 2
+			fp.puts ",{name: 'Medium',"
+			fp.puts "color: 'orange',"
+			tmpline = "data: ["
 
-		fp.puts "name: 'Medium',"
-		fp.puts "color: 'orange',"
-		tmpline = "data: ["
-
-		data.each_with_index do |entry,index|
-			tmpline += entry[1][:med].to_s
-			tmpline += "," unless index == data.length - 1
+			data.each_with_index do |entry,index|
+				tmpline += entry[1][:med].to_s
+				tmpline += "," unless index == data.length - 1
+			end
+			tmpline += "]"
+			fp.puts tmpline
+			fp.puts "}"
 		end
-		tmpline += "]"
-		fp.puts tmpline
-		fp.puts "},{"
 
+		if @options[:severity] <= 1
 
-		fp.puts "name: 'Low',"
-		fp.puts "color: 'green',"
-		tmpline = "data: ["
+			fp.puts ",{name: 'Low',"
+			fp.puts "color: 'green',"
+			tmpline = "data: ["
 
-		data.each_with_index do |entry,index|
-			tmpline += entry[1][:low].to_s
-			tmpline += "," unless index == data.length - 1
+			data.each_with_index do |entry,index|
+				tmpline += entry[1][:low].to_s
+				tmpline += "," unless index == data.length - 1
+			end
+			tmpline += "]"
+			fp.puts tmpline
+			fp.puts "}"
 		end
-		tmpline += "]"
-		fp.puts tmpline
 
 		fp.puts <<-eos
 						
-		            }]
+		            ]
 		        });
 		    });
 		    

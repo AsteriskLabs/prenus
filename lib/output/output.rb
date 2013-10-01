@@ -18,8 +18,11 @@ module Output
 			@options = options
 
 			if @options[:type] == "html" #Therefore, the output should be a folder name, not a file
+
+				@options[:output] = "." if @options[:output].nil?
+
 				#Check if the output dir exists
-				Dir.mkdir(options[:output]) unless File.exists?(options[:output])
+				Dir.mkdir(@options[:output]) unless File.exists?(@options[:output])
 			else
 				@oFile = File.new(@options[:output],'w') unless @options[:output].nil?
 				@oFile = STDOUT if @oFile.nil?
