@@ -88,12 +88,32 @@ class Htmlout < Baseout
 			end
 
 			pie_data = []
-			pie_data << ['Low',low_total.to_i] if @options[:severity] <= 1
-			pie_data << ['Medium',med_total.to_i] if @options[:severity] <= 2
-			pie_data << ['High',high_total.to_i] if @options[:severity] <= 3
-			pie_data << ['Critical',crit_total.to_i] if @options[:severity] <= 4
+			pie_data << ['Low',low_total.to_i,'green'] if @options[:severity] <= 1
+			pie_data << ['Medium',med_total.to_i,'orange'] if @options[:severity] <= 2
+			pie_data << ['High',high_total.to_i,'red'] if @options[:severity] <= 3
+			pie_data << ['Critical',crit_total.to_i,'purple'] if @options[:severity] <= 4
 
-			pie_js(f,"pie_graph","Vuln Breakdown","Vuln Breakdown",pie_data,"document.location.href = 'vuln_overview.html';")
+			pie_js(f,"pie_graph","Unique Vulnerability Breakdown","Unique Vuln Breakdown",pie_data,"document.location.href = 'vuln_overview.html';")
+
+			crit_total = 0
+			high_total = 0
+			med_total = 0
+			low_total = 0
+
+			@hosts.each do |id,values|
+				crit_total += values[:crit].to_i
+				high_total += values[:high].to_i
+				med_total += values[:med].to_i
+				low_total += values[:low].to_i
+			end
+
+			pie_data = []
+			pie_data << ['Low',low_total.to_i,'green'] if @options[:severity] <= 1
+			pie_data << ['Medium',med_total.to_i,'orange'] if @options[:severity] <= 2
+			pie_data << ['High',high_total.to_i,'red'] if @options[:severity] <= 3
+			pie_data << ['Critical',crit_total.to_i,'purple'] if @options[:severity] <= 4
+
+			pie_js(f,"pie_graph2","Total Vunerability Breakdown","Total Vuln Breakdown",pie_data,"document.location = href= 'vuln_overview.html';")
 
 			target_lookup = "var target_lookup = {"
 			@hosts.each_with_index do |host,index|
@@ -111,7 +131,11 @@ class Htmlout < Baseout
 
 			close_html_header(f)
 
-			body = '<div id="pie_graph" style="min-width: 400px; height: 400px; margin: 0 auto"></div>'
+			body = '<div style="width: 800px; margin-left: auto; margin-right: auto; padding-top: 30px;">'
+			body += '<div id="pie_graph" style="min-width: 300px; height: 300px; margin: 0 auto; float: left"></div>'
+			body += '<div id="pie_graph2" style="min-width: 300px; height: 300px; margin: 0 auto; float: left"></div>'
+			body += '</div>'
+			body += '<div style="clear: both;"></div>'
 			body += '<div id="bar_graph" style="min-width: 400px; height: 900px; margin: 0 auto"></div>'
 
 			body += '<div id="allhosts"><h3>All Hosts</h3>'
@@ -264,13 +288,13 @@ class Htmlout < Baseout
 				html_header(f,values[:ip])
 
 				if values[:total_excl_info] == 0
-					pie_js(f,"pie_graph","Criticality Breakdown","Criticality Breakdown",[['Informational ONLY',values[:info].to_i]])					
+					pie_js(f,"pie_graph","Criticality Breakdown","Criticality Breakdown",[['Informational ONLY',values[:info].to_i,'blue']])					
 				else
 					pie_data = []
-					pie_data << ['Low',values[:low].to_i] if @options[:severity] <= 1
-					pie_data << ['Medium',values[:med].to_i] if @options[:severity] <= 2
-					pie_data << ['High',values[:high].to_i] if @options[:severity] <= 3
-					pie_data << ['Critical',values[:crit].to_i] if @options[:severity] <= 4
+					pie_data << ['Low',values[:low].to_i,'green'] if @options[:severity] <= 1
+					pie_data << ['Medium',values[:med].to_i,'orange'] if @options[:severity] <= 2
+					pie_data << ['High',values[:high].to_i,'red'] if @options[:severity] <= 3
+					pie_data << ['Critical',values[:crit].to_i,'purple'] if @options[:severity] <= 4
 					pie_js(f,"pie_graph","Criticality Breakdown","Criticality Breakdown",pie_data,"document.location.href = '#' + event.point.name;")
 				end
 
@@ -744,7 +768,7 @@ class Htmlout < Baseout
                 data: [
 		eos
 		series.each_with_index do |val,index|
-			tmpline =  "\t\t\t['" + val[0] + "'," + val[1].to_s + "]"
+			tmpline =  "\t\t\t{name: '" + val[0] + "', y: " + val[1].to_s + ", color: '" + val[2] + "'}"
 			tmpline += "," unless index == series.length - 1
 			fp.puts tmpline
 		end
