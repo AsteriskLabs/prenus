@@ -615,12 +615,17 @@ class Htmlout < Baseout
             plotOptions: {
                 series: {
                     stacking: 'normal',
-                    threshold: 1,
+                    //threshold: 1,
                     dataLabels: {
                     	enabled: true,
                     	color: '#000000',
                     	x: 0,
-                    	align: 'center'
+                    	align: 'center',
+                    	formatter: function() {
+                    		if (this.y !=0) {
+                    			return this.y;
+                    		}
+                    	}
                     },
                     events: {
                     	click: function(event) {
