@@ -11,14 +11,14 @@ This is a quickly hacked together Ruby script that can consume version 2 nessus 
 == Installation
 
 * Install the Prenus gem:
-* # gem install prenus
+   gem install prenus
 
 == Usage
 
 * Download the .nessus files from Nessus you want to Prettify (make sure they're version 2 files, not version 1)
 * Cd into the folder where the files are
 * Run Prenus:
-* # prenus -t html -o tmp *.nessus
+   prenus -t html -o tmp *.nessus
 * Happy Happy Joy Joy
 
 == Command Line Options
@@ -30,6 +30,7 @@ This is a quickly hacked together Ruby script that can consume version 2 nessus 
        -c, --config FILE                Load a YAML formatted config file
        -o, --ouput DIR/FILE             Defaults to '.'
        -t, --type TYPE                  Select: xls, html, glow, circos or host. Defaults to html
+           --header-file FILE           Optional HTML FILE to be inserted into the top of the index.html file when using HTML output
        -s, --severity LEVEL             Defaults to 3 for High -> Critical. For large datasets 4 is saner
        -f, --filter FILTER              Only show these Nessus IDs. For multiple separate with commas 12345,23232,21212
        -d, --debug                      Displays stats and other debugging
@@ -69,6 +70,10 @@ This option doesn't apply to the html output, but, for all other output types, t
 === Debug
 
 If flagged, then we'll output some raw data.
+
+=== Header File
+
+If you want to add some optional branding to top of the index.html file (when using HTML output type). Create a file with some HTML content, and then point this option to the file. Voila. BRAAANDING
 
 == Afterglow - what?
 
