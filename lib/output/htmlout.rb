@@ -132,8 +132,8 @@ class Htmlout < Baseout
 			close_html_header(f)
 
 			body = '<div style="width: 800px; margin-left: auto; margin-right: auto; padding-top: 30px;">'
-			body += '<div id="pie_graph" style="min-width: 300px; height: 300px; margin: 0 auto; float: left"></div>'
-			body += '<div id="pie_graph2" style="min-width: 300px; height: 300px; margin: 0 auto; float: left"></div>'
+			body += '<div id="pie_graph" style="min-width: 375px; height: 375px; margin: 0 auto; float: left"></div>'
+			body += '<div id="pie_graph2" style="min-width: 375px; height: 375px; margin: 0 auto; float: left"></div>'
 			body += '</div>'
 			body += '<div style="clear: both;"></div>'
 			body += '<div id="bar_graph" style="min-width: 400px; height: 900px; margin: 0 auto"></div>'
@@ -571,6 +571,9 @@ class Htmlout < Baseout
 		    var chart;
 		    $(document).ready(function() {
 		        chart = new Highcharts.Chart({
+		        	credits: {
+		        		enabled: false
+		        	},
 		            chart: {
 		                renderTo: '#{renderto}',
 		                type: 'bar'
@@ -752,6 +755,7 @@ class Htmlout < Baseout
 		            },
 		            plotOptions: {
 		                pie: {
+		                	size: '60%',
 		                    allowPointSelect: true,
 		                    cursor: 'pointer',
 		                    dataLabels: {
@@ -760,7 +764,8 @@ class Htmlout < Baseout
 		                        connectorColor: '#000000',
 		                        formatter: function() {
 		                            return '<b>'+ this.point.name +'</b>: '+ this.y;
-		                        }
+		                        },
+		                        distance: 20
 		                    }
 		eos
 
