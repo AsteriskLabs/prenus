@@ -574,3 +574,14 @@ div.box {
 	border: 1px solid #8080FF;
 	background-color: #E5E5FF;
 }
+
+a:link,
+a:visited {
+	color: black;
+	text-decoration: underline;
+}
+a:hover,
+a:active {
+	color: red;
+	text-decoration: none;
+}

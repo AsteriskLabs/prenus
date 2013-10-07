@@ -148,7 +148,18 @@ class Htmlout < Baseout
 			body += '<table id="hosts_table" class="display"><thead><tr><th>IP</th><th>Hostname</th><th>OS</th><th>Vulnerability Count (Low to Critical)</th></tr></thead><tbody>'
 			ips.sort_by{|ip| ip.split('.').map{|octet| octet.to_i}}.each do |ip|
 				@hosts.select{|k,v| v[:ip] == ip}.each do |k,v|
-					body += '<tr><td><a href="host_' + k.to_s + '.html">' + ip + '</a></td><td>' + v[:hostname] + '</td><td>' + v[:os] + '</td><td>' + v[:total_excl_info].to_s + '</td></tr>'
+					tmp_actual_v_count = 0
+					tmp_actual_v_count += v[:low].to_i if @options[:severity] <= 1 and v[:low].to_i > 0
+					tmp_actual_v_count += v[:med].to_i if @options[:severity] <= 2 and v[:med].to_i > 0
+					tmp_actual_v_count += v[:high].to_i if @options[:severity] <= 3 and v[:high].to_i > 0
+					tmp_actual_v_count += v[:crit].to_i if @options[:severity] <= 4 and v[:crit].to_i > 0
+					body += '<tr><td>'
+					if tmp_actual_v_count > 0
+						body += '<a href="host_' + k.to_s + '.html">' + ip + '</a>'
+					else
+						body += ip
+					end
+					body += '</td><td>' + v[:hostname] + '</td><td>' + v[:os] + '</td><td>' + v[:total_excl_info].to_s + '</td></tr>'
 				end
 			end
 			body += '</tbody></table>'
@@ -601,6 +612,7 @@ class Htmlout < Baseout
             },
             yAxis: {
                 min: 0,
+                allowDecimals: false,
                 title: {
                     text: 'Findings'
                 }
