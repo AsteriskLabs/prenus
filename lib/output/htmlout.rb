@@ -88,10 +88,10 @@ class Htmlout < Baseout
 			end
 
 			pie_data = []
-			pie_data << ['Low',low_total.to_i,'green'] if @options[:severity] <= 1
-			pie_data << ['Medium',med_total.to_i,'orange'] if @options[:severity] <= 2
-			pie_data << ['High',high_total.to_i,'red'] if @options[:severity] <= 3
-			pie_data << ['Critical',crit_total.to_i,'purple'] if @options[:severity] <= 4
+			pie_data << ['Low',low_total.to_i,'green'] if @options[:severity] <= 1 and low_total.to_i > 0
+			pie_data << ['Medium',med_total.to_i,'orange'] if @options[:severity] <= 2 and med_total.to_i > 0
+			pie_data << ['High',high_total.to_i,'red'] if @options[:severity] <= 3 and high_total.to_i > 0
+			pie_data << ['Critical',crit_total.to_i,'purple'] if @options[:severity] <= 4 and crit_total.to_i > 0
 
 			pie_js(f,"pie_graph","Unique Vulnerability Breakdown","Unique Vuln Breakdown",pie_data,"document.location.href = 'vuln_overview.html';")
 
@@ -108,10 +108,10 @@ class Htmlout < Baseout
 			end
 
 			pie_data = []
-			pie_data << ['Low',low_total.to_i,'green'] if @options[:severity] <= 1
-			pie_data << ['Medium',med_total.to_i,'orange'] if @options[:severity] <= 2
-			pie_data << ['High',high_total.to_i,'red'] if @options[:severity] <= 3
-			pie_data << ['Critical',crit_total.to_i,'purple'] if @options[:severity] <= 4
+			pie_data << ['Low',low_total.to_i,'green'] if @options[:severity] <= 1 and low_total.to_i > 0
+			pie_data << ['Medium',med_total.to_i,'orange'] if @options[:severity] <= 2 and med_total.to_i > 0
+			pie_data << ['High',high_total.to_i,'red'] if @options[:severity] <= 3 and high_total.to_i > 0
+			pie_data << ['Critical',crit_total.to_i,'purple'] if @options[:severity] <= 4 and crit_total.to_i > 0
 
 			pie_js(f,"pie_graph2","Total Vunerability Breakdown","Total Vuln Breakdown",pie_data,"document.location = href= 'vuln_overview.html';")
 
@@ -291,10 +291,10 @@ class Htmlout < Baseout
 					pie_js(f,"pie_graph","Criticality Breakdown","Criticality Breakdown",[['Informational ONLY',values[:info].to_i,'blue']])					
 				else
 					pie_data = []
-					pie_data << ['Low',values[:low].to_i,'green'] if @options[:severity] <= 1
-					pie_data << ['Medium',values[:med].to_i,'orange'] if @options[:severity] <= 2
-					pie_data << ['High',values[:high].to_i,'red'] if @options[:severity] <= 3
-					pie_data << ['Critical',values[:crit].to_i,'purple'] if @options[:severity] <= 4
+					pie_data << ['Low',values[:low].to_i,'green'] if @options[:severity] <= 1 and values[:low].to_i > 0
+					pie_data << ['Medium',values[:med].to_i,'orange'] if @options[:severity] <= 2 and values[:med].to_i > 0
+					pie_data << ['High',values[:high].to_i,'red'] if @options[:severity] <= 3 and values[:high].to_i > 0
+					pie_data << ['Critical',values[:crit].to_i,'purple'] if @options[:severity] <= 4 and values[:crit].to_i > 0
 					pie_js(f,"pie_graph","Criticality Breakdown","Criticality Breakdown",pie_data,"document.location.href = '#' + event.point.name;")
 				end
 
@@ -615,6 +615,7 @@ class Htmlout < Baseout
             plotOptions: {
                 series: {
                     stacking: 'normal',
+                    threshold: 1,
                     dataLabels: {
                     	enabled: true,
                     	color: '#000000',
