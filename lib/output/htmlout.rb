@@ -727,6 +727,9 @@ class Htmlout < Baseout
 		    var chart;
 		    $(document).ready(function() {
 		        chart = new Highcharts.Chart({
+		        	credits: {
+		        		enabled: false
+		        	},
 		            chart: {
 		                renderTo: '#{renderto}',
 		                plotBackgroundColor: null,
@@ -738,7 +741,7 @@ class Htmlout < Baseout
 		            },
 		            tooltip: {
 		                formatter: function() {
-		                    return '<b>'+ this.point.name +'</b>: '+ this.percentage +' %';
+		                    return '<b>'+ this.point.name +'</b>: '+ Math.round(this.percentage) +' %';
 		                }
 		            },
 		            plotOptions: {
