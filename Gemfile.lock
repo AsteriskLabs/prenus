@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    prenus (0.0.9)
+    prenus (0.0.10)
       nokogiri (~> 1.6.0)
       rainbow (~> 1.1.0)
 

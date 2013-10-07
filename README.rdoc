@@ -96,6 +96,7 @@ This will only work if you're in the Circos Tools tableviewer folder (in my inst
 This will dump the png into the img/ folder.
 
 == Changes
+* Version 0.0.11 - A bunch of cosmetic changes. PLUS, a new optional command line flag to add HTML content to the top of the index.html file.
 * Version 0.0.10 - Added new pie graph to HTML output, and updated pie graph generater to allow for setting of colours
 * Version 0.0.9 - Added Nokogiri gem dep
 * Version 0.0.8 - Default HTML output directory - plus - can filter out severity issues for HTML. Updated gemspec, removed internal gem

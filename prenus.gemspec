@@ -2,9 +2,9 @@
 $LOAD_PATH.unshift File.expand_path('../lib', __FILE__)
 Gem::Specification.new do |s|
   s.name = "prenus"
-  s.version = "0.0.10"
+  s.version = "0.0.11"
   s.authors = ["Christian Frichot"]
-  s.date = "2013-01-02"
+  s.date = "2013-10-07"
   s.description = "Pretty Nessus = Prenus"
   s.email = "xntrik@gmail.com"
   s.extra_rdoc_files = [
