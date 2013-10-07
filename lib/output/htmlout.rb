@@ -308,7 +308,7 @@ class Htmlout < Baseout
 				body += '<div id="vulns"><h2>Vulnerabilities</h2>'
 
 
-				if @options[:severity] <= 4
+				if @options[:severity] <= 4 and values[:crit].to_i > 0
 					body += '<div id="critical"><a name="Critical"></a><h3>Critical</h3>'
 
 					body += '<table id="critical_table" class="display"><thead><tr><th>Nessus ID</th><th>Name</th><th>Synopsis</th><th>Result</th><th>Family</th><th>Port</th></tr></thead><tbody>'
@@ -325,7 +325,7 @@ class Htmlout < Baseout
 					body += '</tbody></table></div>'
 				end
 
-				if @options[:severity] <= 3
+				if @options[:severity] <= 3 and values[:high].to_i > 0
 
 					body += '<div id="high"><a name="High"></a><h3>High</h3>'
 
@@ -342,7 +342,7 @@ class Htmlout < Baseout
 					body += '</tbody></table></div>'
 				end
 
-				if @options[:severity] <= 2
+				if @options[:severity] <= 2 and values[:med].to_i > 0
 
 					body += '<div id="medium"><a name="Medium"></a><h3>Medium</h3>'
 
@@ -360,7 +360,7 @@ class Htmlout < Baseout
 
 				end
 
-				if @options[:severity] <= 1
+				if @options[:severity] <= 1 and values[:low].to_i > 0
 
 					body += '<div id="low"><a name="Low"></a><h3>Low</h3>'
 
@@ -377,7 +377,7 @@ class Htmlout < Baseout
 					body += '</tbody></table></div>'
 				end
 
-				if @options[:severity] <= 0
+				if @options[:severity] <= 0 and values[:info].to_i > 0
 
 					body += '<div id="informational"><a name="Informational"></a><h3>Informational</h3>'
 
@@ -396,11 +396,11 @@ class Htmlout < Baseout
 
 
 				body += "<script>$(document).ready(function() {\n ";
-				body += "$('#critical_table').dataTable({\"bPaginate\": false});\n" if @options[:severity] > 4
-				body += "$('#high_table').dataTable({\"bPaginate\": false});\n" if @options[:severity] > 3
-				body += "$('#medium_table').dataTable({\"bPaginate\": false});\n" if @options[:severity] > 2
-				body += "$('#low_table').dataTable({\"bPaginate\": false});\n" if @options[:severity] > 1
-				body += "$('#informational_table').dataTable({\"bPaginate\": false});\n" if @options[:severity] > 0
+				body += "$('#critical_table').dataTable({\"bPaginate\": false});\n" if @options[:severity] <= 4
+				body += "$('#high_table').dataTable({\"bPaginate\": false});\n" if @options[:severity] <= 3
+				body += "$('#medium_table').dataTable({\"bPaginate\": false});\n" if @options[:severity] <= 2
+				body += "$('#low_table').dataTable({\"bPaginate\": false});\n" if @options[:severity] <= 1
+				body += "$('#informational_table').dataTable({\"bPaginate\": false});\n" if @options[:severity] <= 0
 				body += "});</script>"
 
 				body += '</div></div>'
