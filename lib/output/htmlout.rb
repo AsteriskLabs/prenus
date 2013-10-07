@@ -145,7 +145,7 @@ class Htmlout < Baseout
 				ips << host[1][:ip]
 			end
 
-			body += '<table id="hosts_table" class="display"><thead><tr><th>IP</th><th>Hostname</th><th>OS</th><th>Number of vulns (Low to Critical)</th></tr></thead><tbody>'
+			body += '<table id="hosts_table" class="display"><thead><tr><th>IP</th><th>Hostname</th><th>OS</th><th>Vulnerability Count (Low to Critical)</th></tr></thead><tbody>'
 			ips.sort_by{|ip| ip.split('.').map{|octet| octet.to_i}}.each do |ip|
 				@hosts.select{|k,v| v[:ip] == ip}.each do |k,v|
 					body += '<tr><td><a href="host_' + k.to_s + '.html">' + ip + '</a></td><td>' + v[:hostname] + '</td><td>' + v[:os] + '</td><td>' + v[:total_excl_info].to_s + '</td></tr>'
@@ -179,7 +179,7 @@ class Htmlout < Baseout
 
 			close_html_header(f)
 
-			body = '<a href="index.html">Home</a><br /><div id="vulns"><h2>Vulns</h2>'
+			body = '<a href="index.html">Home</a><br /><div id="vulns"><h2>Vulnerabilities</h2>'
 
 			body += '<table id="vulns_table" class="display"><thead><tr><th>Nessus ID</th><th>Severity</th><th>Name</th><th>Family</th><th>Ports</th><th>Number of impacted hosts</th></tr></thead><tbody>'
 			@events.each do |k,v| 
@@ -305,7 +305,7 @@ class Htmlout < Baseout
 				body += '<div id="pie_graph" style="min-width: 400px; height: 400px; margin: 0 auto"></div>'
 				body += '</div>'
 
-				body += '<div id="vulns"><h2>Vulns</h2>'
+				body += '<div id="vulns"><h2>Vulnerabilities</h2>'
 
 
 				if @options[:severity] <= 4
