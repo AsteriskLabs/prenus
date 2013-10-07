@@ -131,6 +131,10 @@ class Htmlout < Baseout
 
 			close_html_header(f)
 
+			unless @options[:indexfile].nil?
+				IO.copy_stream(File.open(@options[:indexfile]),f)
+			end
+
 			body = '<div style="width: 800px; margin-left: auto; margin-right: auto; padding-top: 30px;">'
 			body += '<div id="pie_graph" style="min-width: 375px; height: 375px; margin: 0 auto; float: left"></div>'
 			body += '<div id="pie_graph2" style="min-width: 375px; height: 375px; margin: 0 auto; float: left"></div>'
@@ -781,7 +785,7 @@ class Htmlout < Baseout
 		                    }
 		eos
 
-		if not clickfunction.nil?
+		unless clickfunction.nil?
 			fp.puts ',events: { click: function(event) { ' + clickfunction + '} }'
 		end 
 
