@@ -1,5 +1,8 @@
 module Prenus
 module Output
+# Fixed by @nanomebia because @xntrik was too lazy to include "info" level items
+# YOU'RE WELCOME
+# andrew.kitis@asteriskinfosec.com.au
 
 class Htmlout < Baseout
 
@@ -79,15 +82,18 @@ class Htmlout < Baseout
 			high_total = 0
 			med_total = 0
 			low_total = 0
+			info_total = 0
 
 			@events.each do |k,v|
 				crit_total += 1 if v[:severity] == 4
 				high_total += 1 if v[:severity] == 3
 				med_total += 1 if v[:severity] == 2
 				low_total += 1 if v[:severity] == 1
+				info_total += 1 if v[:severity] == 0
 			end
 
 			pie_data = []
+			pie_data << ['Info',info_total.to_i,'blue'] if @options[:severity] <= 0 and info_total.to_i >= 0
 			pie_data << ['Low',low_total.to_i,'green'] if @options[:severity] <= 1 and low_total.to_i > 0
 			pie_data << ['Medium',med_total.to_i,'orange'] if @options[:severity] <= 2 and med_total.to_i > 0
 			pie_data << ['High',high_total.to_i,'red'] if @options[:severity] <= 3 and high_total.to_i > 0
@@ -99,15 +105,18 @@ class Htmlout < Baseout
 			high_total = 0
 			med_total = 0
 			low_total = 0
+			info_total = 0
 
 			@hosts.each do |id,values|
 				crit_total += values[:crit].to_i
 				high_total += values[:high].to_i
 				med_total += values[:med].to_i
 				low_total += values[:low].to_i
+				info_total += values[:info].to_i
 			end
 
 			pie_data = []
+			pie_data << ['Info',info_total.to_i,'blue'] if @options[:severity] <= 0 and info_total.to_i >= 0
 			pie_data << ['Low',low_total.to_i,'green'] if @options[:severity] <= 1 and low_total.to_i > 0
 			pie_data << ['Medium',med_total.to_i,'orange'] if @options[:severity] <= 2 and med_total.to_i > 0
 			pie_data << ['High',high_total.to_i,'red'] if @options[:severity] <= 3 and high_total.to_i > 0
@@ -149,6 +158,7 @@ class Htmlout < Baseout
 			ips.sort_by{|ip| ip.split('.').map{|octet| octet.to_i}}.each do |ip|
 				@hosts.select{|k,v| v[:ip] == ip}.each do |k,v|
 					tmp_actual_v_count = 0
+					tmp_actual_v_count += v[:info].to_i if @options[:severity] <= 0 and v[:info].to_i >= 0
 					tmp_actual_v_count += v[:low].to_i if @options[:severity] <= 1 and v[:low].to_i > 0
 					tmp_actual_v_count += v[:med].to_i if @options[:severity] <= 2 and v[:med].to_i > 0
 					tmp_actual_v_count += v[:high].to_i if @options[:severity] <= 3 and v[:high].to_i > 0
@@ -211,7 +221,7 @@ class Htmlout < Baseout
 			end
 			body += '</tbody></table>'
 
-			body += '<script>$(document).ready(function() { $(\'#vulns_table\').dataTable({"bPaginate": false,"aaSorting": [[1,"desc"],[5,"desc"]]}); });</script>'
+			body += '<script>$(document).ready(function() { $(\'#vulns_table\').dataTable({"bPaginate": false,"aaSorting": [[0,"desc"],[5,"desc"]]}); });</script>'
 			body_text(f,body)
 
 			close_all(f)
@@ -302,6 +312,7 @@ class Htmlout < Baseout
 					pie_js(f,"pie_graph","Criticality Breakdown","Criticality Breakdown",[['Informational ONLY',values[:info].to_i,'blue']])					
 				else
 					pie_data = []
+					pie_data << ['Info',values[:info].to_i,'blue'] if @options[:severity] <= 0 and values[:info].to_i >= 0
 					pie_data << ['Low',values[:low].to_i,'green'] if @options[:severity] <= 1 and values[:low].to_i > 0
 					pie_data << ['Medium',values[:med].to_i,'orange'] if @options[:severity] <= 2 and values[:med].to_i > 0
 					pie_data << ['High',values[:high].to_i,'red'] if @options[:severity] <= 3 and values[:high].to_i > 0
@@ -714,6 +725,22 @@ class Htmlout < Baseout
 			fp.puts tmpline
 			fp.puts "}"
 		end
+
+                if @options[:severity] <= 0
+
+                        fp.puts ",{name: 'Info',"
+                        fp.puts "color: 'blue',"
+                        tmpline = "data: ["
+
+                        data.each_with_index do |entry,index|
+                                tmpline += entry[1][:info].to_s
+                                tmpline += "," unless index == data.length - 1
+                        end
+                        tmpline += "]"
+                        fp.puts tmpline
+                        fp.puts "}"
+                end
+
 
 		fp.puts <<-eos
 						
