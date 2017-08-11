@@ -113,7 +113,7 @@ class Htmlout < Baseout
 			pie_data << ['High',high_total.to_i,'red'] if @options[:severity] <= 3 and high_total.to_i > 0
 			pie_data << ['Critical',crit_total.to_i,'purple'] if @options[:severity] <= 4 and crit_total.to_i > 0
 
-			pie_js(f,"pie_graph2","Total Vunerability Breakdown","Total Vuln Breakdown",pie_data,"document.location = href= 'vuln_overview.html';")
+			pie_js(f,"pie_graph2","Total Vulnerability Breakdown","Total Vuln Breakdown",pie_data,"document.location = href= 'vuln_overview.html';")
 
 			target_lookup = "var target_lookup = {"
 			@hosts.each_with_index do |host,index|
@@ -193,14 +193,14 @@ class Htmlout < Baseout
 			body = '<a href="index.html">Home</a><br /><div id="vulns"><h2>Vulnerabilities</h2>'
 
 			body += '<table id="vulns_table" class="display"><thead><tr><th>Nessus ID</th><th>Severity</th><th>Name</th><th>Family</th><th>Ports</th><th>Number of impacted hosts</th></tr></thead><tbody>'
-			@events.each do |k,v| 
+			@events.each do |k,v|
 				next if v[:severity].to_i < @options[:severity].to_i
 				body += '<tr><td><a href="vuln_' + k.to_s + '.html">' + k.to_s
 				body += '</a></td><td>' + v[:severity].to_s + '<td>' + v[:plugin_name] + '</td>'
 				body += '<td>' + v[:family].to_s + '</td><td>'
 				impacted_hosts = []
 				v[:ports].each_with_index do |(k2,v2),index|
-					body += k2.to_s 
+					body += k2.to_s
 					body += ", " unless index == v[:ports].length - 1
 					v2[:hosts].each do |h,w|
 						impacted_hosts << h
@@ -259,7 +259,7 @@ class Htmlout < Baseout
 				body += '<table id="hosts_table" class="display"><thead><tr><th>Host IP</th><th>Hostname</th><th>OS</th><th>Port</th><th>Result</th></tr></thead><tbody>'
 
 				impacted_hosts.uniq.each do |host|
-					
+
 					values[:ports].each{|k,v|
 						v[:hosts].each do |h,w|
 							if h == host
@@ -299,7 +299,7 @@ class Htmlout < Baseout
 				html_header(f,values[:ip])
 
 				if values[:total_excl_info] == 0
-					pie_js(f,"pie_graph","Criticality Breakdown","Criticality Breakdown",[['Informational ONLY',values[:info].to_i,'blue']])					
+					pie_js(f,"pie_graph","Criticality Breakdown","Criticality Breakdown",[['Informational ONLY',values[:info].to_i,'blue']])
 				else
 					pie_data = []
 					pie_data << ['Low',values[:low].to_i,'green'] if @options[:severity] <= 1 and values[:low].to_i > 0
@@ -468,7 +468,7 @@ class Htmlout < Baseout
 				    "ip-address-pre": function ( a ) {
 				    	var b = a.replace(/<.*?>/g,"");
 				        var m = b.split("."), x = "";
-				 
+
 				        for(var i = 0; i < m.length; i++) {
 				            var item = m[i];
 				            if(item.length == 1) {
@@ -479,14 +479,14 @@ class Htmlout < Baseout
 				                x += item;
 				            }
 				        }
-				 
+
 				        return x;
 				    },
-				 
+
 				    "ip-address-asc": function ( a, b ) {
 				        return ((a < b) ? -1 : ((a > b) ? 1 : 0));
 				    },
-				 
+
 				    "ip-address-desc": function ( a, b ) {
 				        return ((a < b) ? 1 : ((a > b) ? -1 : 0));
 				    }
@@ -716,11 +716,11 @@ class Htmlout < Baseout
 		end
 
 		fp.puts <<-eos
-						
+
 		            ]
 		        });
 		    });
-		    
+
 		});
 		eos
 	end
@@ -787,7 +787,7 @@ class Htmlout < Baseout
 
 		unless clickfunction.nil?
 			fp.puts ',events: { click: function(event) { ' + clickfunction + '} }'
-		end 
+		end
 
 		fp.puts <<-eos
                 }
@@ -808,10 +808,10 @@ class Htmlout < Baseout
 		            }]
 		        });
 		    });
-		    
+
 		});
 		eos
-		
+
 	end
 
 end
