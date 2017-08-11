@@ -138,7 +138,7 @@ class Htmlout < Baseout
 			body += '<div style="clear: both;"></div>'
 			body += '<div id="bar_graph" style="min-width: 400px; height: 900px; margin: 0 auto"></div>'
 
-			body += '<div id="allhosts"><h3>All Hosts</h3>'
+			body += '<div id="allhosts" style="font-family: Arial, Helvetica, sans-serif"><h3>All Hosts</h3>'
 
 			ips = []
 			@hosts.each do |host|
@@ -190,7 +190,7 @@ class Htmlout < Baseout
 
 			close_html_header(f)
 
-			body = '<a href="index.html">Home</a><br /><div id="vulns"><h2>Vulnerabilities</h2>'
+			body = '<a href="index.html">Home</a><br /><div id="vulns" style="font-family: Arial, Helvetica, sans-serif"><h2>Vulnerabilities</h2>'
 
 			body += '<table id="vulns_table" class="display"><thead><tr><th>Nessus ID</th><th>Severity</th><th>Name</th><th>Family</th><th>Ports</th><th>Number of impacted hosts</th></tr></thead><tbody>'
 			@events.each do |k,v|
@@ -236,7 +236,7 @@ class Htmlout < Baseout
 
 				close_html_header(f)
 
-				body = '<a href="index.html">Home</a><br /><div id="vuln"><div id="overview">Nessus ID: ' + id.to_s + '<br />Name: ' + values[:plugin_name] + '<br />Severity: ' + values[:severity].to_s + '<br />Family: ' + values[:family] + '<br />Ports: '
+				body = '<a href="index.html">Home</a><br /><div id="vuln" style="font-family: Arial, Helvetica, sans-serif"><div id="overview">Nessus ID: ' + id.to_s + '<br />Name: ' + values[:plugin_name] + '<br />Severity: ' + values[:severity].to_s + '<br />Family: ' + values[:family] + '<br />Ports: '
 				impacted_hosts = []
 				values[:ports].each_with_index {|(k,v),index|
 					body += k.to_s
@@ -254,7 +254,7 @@ class Htmlout < Baseout
 				body +='<br /><br />CVE: ' + values[:cve].to_s + '<br />CVSS Base Score: ' + values[:cvss_base_score].to_s + '<br />CVSS Vector: ' + values[:cvss_vector].to_s + '</div>'
 				body += '</div>'
 
-				body += '<div id="hosts"><h2>Hosts</h2>'
+				body += '<div id="hosts" style="font-family: Arial, Helvetica, sans-serif"><h2>Hosts</h2>'
 
 				body += '<table id="hosts_table" class="display"><thead><tr><th>Host IP</th><th>Hostname</th><th>OS</th><th>Port</th><th>Result</th></tr></thead><tbody>'
 
@@ -311,7 +311,7 @@ class Htmlout < Baseout
 
 				close_html_header(f)
 
-				body = '<a href="index.html">Home</a><br /><div id="host"><div id="overview">Hostname: ' + values[:hostname] + '<br />IP: ' + values[:ip] + '<br />OS: ' + values[:os] + '<br /></div>'
+				body = '<a href="index.html">Home</a><br /><div id="host" style="font-family: Arial, Helvetica, sans-serif"><div id="overview">Hostname: ' + values[:hostname] + '<br />IP: ' + values[:ip] + '<br />OS: ' + values[:os] + '<br /></div>'
 				body += '<div id="graphs"><h2>Overview</h2>'
 				body += '<div id="pie_graph" style="min-width: 400px; height: 400px; margin: 0 auto"></div>'
 				body += '</div>'
