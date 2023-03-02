@@ -1,6 +1,19 @@
 module Prenus
 module Output
 
+if RUBY_VERSION >= '3.2.0'
+	# version of ruby is >= 3.2.0, applying monkeypatch to File and Dir (see https://bugs.ruby-lang.org/issues/17391)
+
+  class << File
+    alias_method :exists?, :exist?
+  end
+
+  class << Dir
+    alias_method :exists?, :exist?
+  end
+
+end
+
 	class Baseout
 
 		@events = {} 	#instance variable of all vulnerability events
